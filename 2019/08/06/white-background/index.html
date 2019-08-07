@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang=zh-CN>
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="description" content="某废希的博客">
+  <meta name="keywords" content="">
+  
+    <link rel="icon" href="/favicon.ico">
+  
+    
+  <title>所以到底怎么渲白底？ | 某废希的博客</title>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/lib/jquery.fancybox.min.css">
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body>
+  <header>
+  <div class="header-container">
+    <a class='logo' href="/">
+      <span>某废希的博客</span>
+    </a>
+    <ul class="right-header">
+      
+        <li class="nav-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/about" class="item-link">关于</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/archives" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/tags" class="item-link">标签</a>
+          
+        </li>
+      
+    </ul>
+  </div>
+</header>
+
+  <main id='post'>
+  <div class="content">
+    <article>
+        <section class="content markdown-body">
+          <h1>所以到底怎么渲白底？</h1>
+          <div class='post-meta'>
+            <i class="fa fa-calendar" aria-hidden="true"></i> <time>2019年08月06日</time>
+            
+              | <i class="fa fa-folder-open-o" aria-hidden="true"></i> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/博客/">博客</a>
+  </div>
+
+
+
+            
+            
+              | 
+                  <i class="fa fa-tag" aria-hidden="true"></i>
+                
+               
+  <a href="/tags/#渲染" class='tag'>渲染</a>
+
+
+            
+          </div>
+          <p>来到了北京三个月了，Frank 要求我们的图背景纯白，这好像不是什么特别困难的要求，套路无非是做一个 L 型的摄影棚环境，然后打亮背景。</p>
+<p>然而，小组的负责人跟我说，这样不纯白，除了产品和它的影子，应该都是白色的。嗯……那要怎么渲？</p>
+<p>答曰：背景颜色调成白色，放个VRay的无限地面。</p>
+<p>但但但但是，这样物体相当于是被来自四面八方的白光照亮了，肯定会有问题——当然这可以协调材质和灯光解决。可归根结底，这样的方法非常别扭。</p>
+<p>突然发现，渲白底这种基本功我好像还真不会……</p>
+<p>所以要重新搭建一个啦</p>
+<p>第一步很容易想到，3Ds Max 里环境颜色的白色，可以在 Vray 的环境里覆盖掉，一通操作覆盖为黑色就行。<br><img src="https://s2.ax1x.com/2019/08/07/eoZg9x.png" alt="eoZg9x.png"></p>
+<p>渲染出来是这样的：<br><img src="https://s2.ax1x.com/2019/08/07/eoZWjO.jpg" alt="eoZWjO.jpg"></p>
+<p>但加入了地面之后，又不是纯白的了 OTZ<br><img src="https://s2.ax1x.com/2019/08/07/eoZhuD.jpg" alt="eoZhuD.jpg"></p>
+<p>要是地面能透出背景的颜色，还能产生阴影就好了。</p>
+<p>查找资料，发现这种东西叫 Matte （无光 / 投影）。</p>
+<p>Matte 可以通过Vray属性或者VrayMtlWrapper实现，我感觉VrayMtlWrapper比较亲切，就用了这个方法。</p>
+<p>还是之前的白色VrayMtl，然后套上VrayMtlWrapper。在无光属性里，点上Matte surface和Shadows，将Alpha contribution 设置为-1，勾选Affect alpha（我其实很少用 Alpha 通道，所以Alpha contribution 和 Affect alpha 的设置其实不必要，但看了Vray文档，这样设置才能被Vray GPU识别，这对我倒是有用的）<br>设置如图<br><img src="https://s2.ax1x.com/2019/08/07/eoZ236.png" alt="eoZ236.png"></p>
+<p>渲染出来是这样的<br><img src="https://s2.ax1x.com/2019/08/07/eoZRgK.jpg" alt="eoZRgK.jpg"></p>
+<p>emmm 影子有点乱了，但我困了，先这样吧。方法才是最重要的不是么。</p>
+<p>但其实这种方法依然有问题，用tone map 的时候背景会被压灰，所以背景要更亮才好，但3ds max里似乎并不能方便地调整背景的亮度，因此这个方法还不够完美</p>
+
+        </section>
+    </article>
+    
+    
+        <!-- livere 评论框 start -->
+        <div class="comment">
+            <div id="lv-container" data-id="city" data-uid="MTAyMC8zOTE1My8xNTY4MA=="></div>
+        </div>
+        <!-- livere 评论框 end -->
+        
+  </div>
+  <aside>
+    
+  </aside>
+</main>
+
+
+<script type="text/javascript">
+  (function(d, s) {
+      var j, e = d.getElementsByTagName(s)[0];
+
+      if (typeof LivereTower === 'function') { return; }
+
+      j = d.createElement(s);
+      j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+      j.async = true;
+
+      e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+</script>
+
+
+  <footer>
+  <div class="copyright">
+    <div>
+      &copy; 2019 | Powered by <a href="https://hexo.io" target="_blank">Hexo</a>&nbsp
+    </div>
+    <div>
+      Theme by <a href="https://github.com/lewis-geek/hexo-theme-Aath" target="_blank">Aath</a>
+    </div>
+  </div>
+</footer>
+
+
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script src="/lib/in-view.min.js"></script>
+<script src="/lib/lodash.min.js"></script>
+<script>
+  var isDown = true
+  var oldY = 0
+  inView.offset(50)
+
+  document.body.addEventListener('touchstart', function(){});
+  
+  window.addEventListener('scroll', _.throttle(e => {
+    var currentY = window.scrollY
+    if((oldY - currentY) < 0) {
+      isDown = true
+    } else {
+      isDown = false
+    }
+    oldY = currentY
+  }, 250))
+
+  $("article img").each(function() {
+      var strA = "<a data-fancybox='gallery' href='" + this.src + "'></a>";
+      $(this).wrapAll(strA);
+  });
+
+  $('.toc-link').each(function() {
+      var href = $(this).attr("href");
+      
+      inView(href).on('exit', () => {
+        if (isDown) {
+          handleActive(href)
+        }
+      })
+
+      inView(href).on('enter', () => {
+        if (!isDown) {
+          handleActive(href)
+        }
+      })
+
+      this.onclick = function(e) {
+        var pos = $(href).offset().top - 10;
+        $("html,body").animate({scrollTop: pos}, 300);
+        setTimeout(() => {
+          handleActive(href)
+        }, 350)
+        return false
+      }
+  })
+
+  function handleActive(href) {
+    document.querySelectorAll('.toc-link').forEach(elm => {
+      elm.classList.remove('active')
+    })
+    document.querySelector(".toc [href='"+ href +"']").classList.add('active')
+  }
+</script>
+<script src="/lib/jquery.fancybox.min.js"></script>
+
+
+</body>
+</html>
